@@ -42,6 +42,9 @@ export function Home() {
   const handleAddTodo = (todo: Todo) => {
     setTodos((prev) => [...prev, todo]);
   };
+  const handleDeleteTodoById = (id: number) => {
+    setTodos((prev) => prev.filter((todo) => todo.id !== id));
+  };
 
   useEffect(() => {
     fetchTodos();
@@ -82,7 +85,11 @@ export function Home() {
         </div>
       </div>
       <div className="py-5">
-        <TableTodo todos={todos} onStatusChange={handleStatusChange} />
+        <TableTodo
+          todos={todos}
+          onStatusChange={handleStatusChange}
+          onDelete={handleDeleteTodoById}
+        />
       </div>
       <PaginationTodo></PaginationTodo>
     </div>

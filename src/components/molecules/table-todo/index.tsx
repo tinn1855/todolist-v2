@@ -1,6 +1,14 @@
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -15,12 +23,34 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { deleteTodoById } from '@/hooks/use-delete-todo';
 import { Todo } from '@/hooks/use-get-todos';
+import { useState } from 'react';
 interface TableTodoProps {
   todos: Todo[];
   onStatusChange?: (id: number, status: Todo['status']) => void;
+  onDelete: (id: number) => void;
 }
-export function TableTodo({ todos, onStatusChange }: TableTodoProps) {
+export function TableTodo({ todos, onStatusChange, onDelete }: TableTodoProps) {
+  const [open, setOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+
+  const handleDeleteTodoById = async () => {
+    if (selectedId === null) return;
+
+    try {
+      await deleteTodoById(selectedId);
+      onDelete(selectedId);
+      setOpen(false);
+    } catch (err) {
+      throw new Error(`Failed to delete todo ${err}`);
+    }
+  };
+
+  const openConfirmDelete = (id: number) => {
+    setSelectedId(id);
+    setOpen(true);
+  };
   return (
     <Table>
       <TableHeader>
@@ -64,11 +94,35 @@ export function TableTodo({ todos, onStatusChange }: TableTodoProps) {
             <TableCell>{todo.priority}</TableCell>
             <TableCell className="text-right">
               <Button className="mr-2">Edit</Button>
-              <Button variant="destructive">Delete</Button>
+              <Button
+                variant="destructive"
+                onClick={() => openConfirmDelete(todo.id)}
+              >
+                Delete
+              </Button>
             </TableCell>
           </TableRow>
         ))}
       </TableBody>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Are you sure?</DialogTitle>
+            <DialogDescription>
+              This action cannot be undone. This will permanently delete the
+              task.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDeleteTodoById}>
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Table>
   );
 }

@@ -1,5 +1,3 @@
-// utils/validate-todo.ts
-
 import { Todo } from '@/hooks/use-get-todos';
 
 export function validateTodoTitle(
