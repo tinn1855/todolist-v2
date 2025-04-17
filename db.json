@@ -1,34 +1,16 @@
 {
   "todos": [
     {
-      "id": "1",
-      "title": "Learn ReactJs and NodeJS",
-      "status": "completed",
-      "priority": "medium"
-    },
-    {
-      "id": "2",
-      "title": "Coding Todo List",
-      "status": "completed",
-      "priority": "high"
-    },
-    {
-      "id": "3",
-      "title": "Review HTML5, CSS3 and Senmatic HTML",
-      "status": "incomplete",
-      "priority": "low"
-    },
-    {
-      "id": "4",
-      "title": "Learn English for Coding",
-      "status": "completed",
-      "priority": "medium"
-    },
-    {
-      "id": "71fa",
-      "title": "learning",
+      "id": "a5b1",
+      "title": "haha",
       "priority": "medium",
       "status": "incomplete"
+    },
+    {
+      "id": "5e6a",
+      "title": "hahah",
+      "priority": "medium",
+      "status": "completed"
     }
   ]
 }

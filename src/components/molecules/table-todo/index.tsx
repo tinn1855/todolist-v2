@@ -30,8 +30,17 @@ interface TableTodoProps {
   todos: Todo[];
   onStatusChange?: (id: number, status: Todo['status']) => void;
   onDelete: (id: number) => void;
+  selectedIds: number[];
+  onToggleSelect: (id: number) => void;
+  onSelectAll: (checked: boolean) => void;
 }
-export function TableTodo({ todos, onStatusChange, onDelete }: TableTodoProps) {
+export function TableTodo({
+  todos,
+  onStatusChange,
+  onDelete,
+  selectedIds,
+  onToggleSelect,
+}: TableTodoProps) {
   const [open, setOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
@@ -51,6 +60,7 @@ export function TableTodo({ todos, onStatusChange, onDelete }: TableTodoProps) {
     setSelectedId(id);
     setOpen(true);
   };
+
   return (
     <Table>
       <TableHeader>
@@ -66,7 +76,10 @@ export function TableTodo({ todos, onStatusChange, onDelete }: TableTodoProps) {
         {todos.map((todo) => (
           <TableRow className="text-left" key={todo.id}>
             <TableCell className="font-medium">
-              <Checkbox />
+              <Checkbox
+                checked={selectedIds.includes(todo.id)}
+                onCheckedChange={() => onToggleSelect(todo.id)}
+              />
             </TableCell>
             <TableCell>{todo.title}</TableCell>
             <TableCell>
