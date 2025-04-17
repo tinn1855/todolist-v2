@@ -77,6 +77,11 @@ export function Home() {
       console.error('Failed to delete selected todos:', error);
     }
   };
+  const handleUpdateTodo = (updatedTodo: Todo) => {
+    setTodos((prevTodos) =>
+      prevTodos.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo))
+    );
+  };
 
   useEffect(() => {
     fetchTodos();
@@ -142,6 +147,7 @@ export function Home() {
           selectedIds={selectedIds}
           onToggleSelect={handleToggleSelect}
           onSelectAll={handleSelectAll}
+          onUpdate={handleUpdateTodo}
         />
       </div>
       <PaginationTodo></PaginationTodo>
