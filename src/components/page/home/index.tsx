@@ -39,6 +39,9 @@ export function Home() {
       alert('Failed to update status');
     }
   };
+  const handleAddTodo = (todo: Todo) => {
+    setTodos((prev) => [...prev, todo]);
+  };
 
   useEffect(() => {
     fetchTodos();
@@ -48,7 +51,7 @@ export function Home() {
     <div className="container mx-auto px-4 text-center max-w-5xl">
       <Heading className="">TODO LIST</Heading>
       <div className="py-5">
-        <AddTodo />
+        <AddTodo onAdd={handleAddTodo} existingTodos={todos} />
       </div>
       <div className="flex justify-between items-center">
         <div className="flex gap-2">
