@@ -9,7 +9,7 @@
     {
       "id": "2",
       "title": "Coding Todo List",
-      "status": "incomplete",
+      "status": "completed",
       "priority": "high"
     },
     {
@@ -21,7 +21,7 @@
     {
       "id": "4",
       "title": "Learn English for Coding",
-      "status": "incomplete",
+      "status": "completed",
       "priority": "medium"
     }
   ]

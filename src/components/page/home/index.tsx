@@ -11,14 +11,11 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { getTodos, Todo } from '@/hooks/use-get-todos';
+import { updateTodoStatus } from '@/hooks/use-update-todos';
 import { useEffect, useState } from 'react';
 
 export function Home() {
   const [todos, setTodos] = useState<Todo[]>([]);
-
-  useEffect(() => {
-    fetchTodos();
-  }, []);
 
   const fetchTodos = async () => {
     try {
@@ -28,6 +25,25 @@ export function Home() {
       console.error(error);
     }
   };
+
+  const handleStatusChange = async (id: number, newStatus: Todo['status']) => {
+    try {
+      const updated = await updateTodoStatus(id, newStatus);
+      setTodos((prev) =>
+        prev.map((todo) =>
+          todo.id === id ? { ...todo, status: updated.status } : todo
+        )
+      );
+    } catch (error) {
+      console.error('Update failed:', error);
+      alert('Failed to update status');
+    }
+  };
+
+  useEffect(() => {
+    fetchTodos();
+  }, []);
+
   return (
     <div className="container mx-auto px-4 text-center max-w-5xl">
       <Heading className="">TODO LIST</Heading>
@@ -63,7 +79,7 @@ export function Home() {
         </div>
       </div>
       <div className="py-5">
-        <TableTodo todos={todos} />
+        <TableTodo todos={todos} onStatusChange={handleStatusChange} />
       </div>
       <PaginationTodo></PaginationTodo>
     </div>
