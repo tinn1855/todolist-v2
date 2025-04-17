@@ -1,0 +1,28 @@
+{
+  "todos": [
+    {
+      "id": "1",
+      "title": "Learn ReactJs and NodeJS",
+      "status": "incomplete",
+      "priority": "medium"
+    },
+    {
+      "id": "2",
+      "title": "Coding Todo List",
+      "status": "incomplete",
+      "priority": "high"
+    },
+    {
+      "id": "3",
+      "title": "Review HTML5, CSS3 and Senmatic HTML",
+      "status": "incomplete",
+      "priority": "low"
+    },
+    {
+      "id": "4",
+      "title": "Learn English for Coding",
+      "status": "incomplete",
+      "priority": "medium"
+    }
+  ]
+}
