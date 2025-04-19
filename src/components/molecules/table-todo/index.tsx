@@ -100,7 +100,7 @@ export function TableTodo({
       <TableHeader>
         <TableRow>
           <TableHead></TableHead>
-          <TableHead>Description Task</TableHead>
+          <TableHead className="w-[550px]">Description Task</TableHead>
           <TableHead>Status</TableHead>
           <TableHead>Priority</TableHead>
           <TableHead className="text-right">Action</TableHead>

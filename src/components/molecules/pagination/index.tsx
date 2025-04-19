@@ -1,36 +1,77 @@
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
+import { cn } from '@/lib/utils';
 
-export function PaginationTodo() {
+interface PaginationTodoProps {
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}
+
+export function PaginationTodo({
+  currentPage,
+  totalPages,
+  onPageChange,
+}: PaginationTodoProps) {
+  const handlePrev = () => {
+    if (currentPage > 1) {
+      onPageChange(currentPage - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      onPageChange(currentPage + 1);
+    }
+  };
+
   return (
     <Pagination>
-      <PaginationContent>
+      <PaginationContent className="flex items-center gap-2">
         <PaginationItem>
-          <PaginationPrevious href="#" />
+          <PaginationPrevious
+            className={cn(
+              currentPage === 1
+                ? 'cursor-not-allowed opacity-50'
+                : 'cursor-pointer'
+            )}
+            onClick={handlePrev}
+          />
         </PaginationItem>
+
+        {Array.from({ length: totalPages }, (_, i) => {
+          const page = i + 1;
+          return (
+            <PaginationItem key={page}>
+              <PaginationLink
+                href=""
+                isActive={page === currentPage}
+                onClick={(e) => {
+                  e.preventDefault();
+                  onPageChange(page);
+                }}
+              >
+                {page}
+              </PaginationLink>
+            </PaginationItem>
+          );
+        })}
+
         <PaginationItem>
-          <PaginationLink href="#">1</PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href="#" isActive>
-            2
-          </PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href="#">3</PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationEllipsis />
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationNext href="#" />
+          <PaginationNext
+            className={cn(
+              currentPage >= totalPages
+                ? 'cursor-not-allowed opacity-50'
+                : 'cursor-pointer'
+            )}
+            onClick={handleNext}
+          />
         </PaginationItem>
       </PaginationContent>
     </Pagination>
