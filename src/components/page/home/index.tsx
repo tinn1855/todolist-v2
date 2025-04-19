@@ -24,6 +24,7 @@ import { deleteAllTodos } from '@/hooks/use-delete-todo';
 import { getTodos, Todo } from '@/hooks/use-get-todos';
 import { updateTodoPriority, updateTodoStatus } from '@/hooks/use-update-todos';
 import { FilterByStatus } from '@/components/future/filter-by-status';
+import { FilterByPriority } from '@/components/future/filter-by-priority';
 
 export function Home() {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -32,15 +33,24 @@ export function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const { filter, setFilter, filteredData } = FilterByStatus(todos);
+  const { filterPriority, setFilterPriority, filteredPriorityData } =
+    FilterByPriority(todos);
+
+  const combineFilter = filteredPriorityData.filter((todo) =>
+    filteredData.some((item) => item.id === todo.id)
+  );
 
   const itemsPerPage = 5;
 
   const pageParam = parseInt(searchParams.get('page') || '1', 10);
   const [currentPage, setCurrentPage] = useState<number>(pageParam);
 
-  const totalPages = Math.max(1, Math.ceil(filteredData.length / itemsPerPage));
+  const totalPages = Math.max(
+    1,
+    Math.ceil(combineFilter.length / itemsPerPage)
+  );
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginationData = filteredData.slice(
+  const paginationData = combineFilter.slice(
     startIndex,
     startIndex + itemsPerPage
   );
@@ -151,15 +161,13 @@ export function Home() {
   useEffect(() => {
     const newPage = 1;
     setCurrentPage(newPage);
-
     if (newPage === 1) {
       searchParams.delete('page');
     } else {
       searchParams.set('page', String(newPage));
     }
-
     setSearchParams(searchParams);
-  }, [filter]);
+  }, [filter, filterPriority]);
 
   return (
     <div className="container mx-auto px-4 text-center max-w-5xl">
@@ -202,16 +210,20 @@ export function Home() {
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="all">Status</SelectItem>
               <SelectItem value="completed">Completed</SelectItem>
               <SelectItem value="incomplete">Incomplete</SelectItem>
             </SelectContent>
           </Select>
-          <Select>
+          <Select
+            onValueChange={(value) => setFilterPriority(value as any)}
+            value={filterPriority}
+          >
             <SelectTrigger className="w-[100px]">
               <SelectValue placeholder="Priority" />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="all">Priority</SelectItem>
               <SelectItem value="high">High</SelectItem>
               <SelectItem value="medium">Medium</SelectItem>
               <SelectItem value="low">Low</SelectItem>
