@@ -1,3 +1,4 @@
+import { SortByTitle } from '@/components/future/sort-by-title';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -27,6 +28,7 @@ import {
 import { deleteTodoById } from '@/hooks/use-delete-todo';
 import { Todo } from '@/hooks/use-get-todos';
 import { updateTodoTitle } from '@/hooks/use-update-todos';
+import { ArrowDownUp } from 'lucide-react';
 import { useState } from 'react';
 
 interface TableTodoProps {
@@ -94,20 +96,26 @@ export function TableTodo({
       console.error('Failed to update todo:', err);
     }
   };
+  const { sortedData, sortByTitle } = SortByTitle(todos);
 
   return (
     <Table>
       <TableHeader>
         <TableRow>
           <TableHead></TableHead>
-          <TableHead className="w-[550px]">Description Task</TableHead>
+          <TableHead className="w-[550px] cursor-pointer" onClick={sortByTitle}>
+            <div className="flex items-center gap-2">
+              Description Task
+              <ArrowDownUp size={16} />
+            </div>
+          </TableHead>
           <TableHead>Status</TableHead>
           <TableHead>Priority</TableHead>
           <TableHead className="text-right">Action</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {todos.map((todo) => (
+        {sortedData.map((todo) => (
           <TableRow className="text-left" key={todo.id}>
             <TableCell className="font-medium">
               <Checkbox
