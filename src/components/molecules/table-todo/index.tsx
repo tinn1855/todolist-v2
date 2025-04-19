@@ -34,6 +34,7 @@ import { useState } from 'react';
 interface TableTodoProps {
   todos: Todo[];
   onStatusChange?: (id: number, status: Todo['status']) => void;
+  onPriorityChange?: (id: number, priority: Todo['priority']) => void;
   onDelete: (id: number) => void;
   onUpdate: (updatedTodo: Todo) => void; // Thêm onUpdate để cập nhật todos trong state
   selectedIds: number[];
@@ -44,6 +45,7 @@ interface TableTodoProps {
 export function TableTodo({
   todos,
   onStatusChange,
+  onPriorityChange,
   onDelete,
   onUpdate, // Nhận thêm prop onUpdate
   selectedIds,
@@ -146,7 +148,31 @@ export function TableTodo({
                 </SelectContent>
               </Select>
             </TableCell>
-            <TableCell>{todo.priority}</TableCell>
+            <TableCell>
+              <Select
+                value={todo.priority}
+                onValueChange={(value: Todo['priority']) =>
+                  onPriorityChange?.(todo.id, value)
+                }
+              >
+                <SelectTrigger
+                  className={`w-[100px] ${
+                    todo.priority === 'high'
+                      ? 'bg-red-100 text-red-700'
+                      : todo.priority === 'medium'
+                      ? 'bg-gray-100 text-gray-700'
+                      : 'bg-black text-white'
+                  }`}
+                >
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="high">High</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="low">Low</SelectItem>
+                </SelectContent>
+              </Select>
+            </TableCell>
             <TableCell className="text-right">
               <Button className="mr-2" onClick={() => openEditTodo(todo.id)}>
                 Edit

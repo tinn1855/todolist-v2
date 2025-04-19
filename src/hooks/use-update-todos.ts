@@ -36,3 +36,22 @@ export async function updateTodoTitle(
 
   return res.json();
 }
+
+export async function updateTodoPriority(
+  id: number,
+  priority: Todo['priority']
+): Promise<Todo> {
+  const res = await fetch(`${BASE_URL}/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ priority }),
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to update priority todo');
+  }
+
+  return res.json();
+}

@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/select';
 import { deleteAllTodos } from '@/hooks/use-delete-todo';
 import { getTodos, Todo } from '@/hooks/use-get-todos';
-import { updateTodoStatus } from '@/hooks/use-update-todos';
+import { updateTodoPriority, updateTodoStatus } from '@/hooks/use-update-todos';
 import { FilterByStatus } from '@/components/future/filter-by-status';
 
 export function Home() {
@@ -65,6 +65,22 @@ export function Home() {
     } catch (error) {
       console.error('Update failed:', error);
       alert('Failed to update status');
+    }
+  };
+
+  const handlePriorityChange = async (
+    id: number,
+    newPriority: Todo['priority']
+  ) => {
+    try {
+      const updated = await updateTodoPriority(id, newPriority);
+      setTodos((prev) =>
+        prev.map((todo) =>
+          todo.id === id ? { ...todo, priority: updated.priority } : todo
+        )
+      );
+    } catch (error) {
+      console.log('Update priority failed', error);
     }
   };
 
@@ -183,6 +199,7 @@ export function Home() {
         <TableTodo
           todos={paginationData}
           onStatusChange={handleStatusChange}
+          onPriorityChange={handlePriorityChange}
           onDelete={handleDeleteTodoById}
           selectedIds={selectedIds}
           onToggleSelect={handleToggleSelect}
