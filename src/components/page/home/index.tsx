@@ -38,7 +38,7 @@ export function Home() {
   const pageParam = parseInt(searchParams.get('page') || '1', 10);
   const [currentPage, setCurrentPage] = useState<number>(pageParam);
 
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const totalPages = Math.max(1, Math.ceil(filteredData.length / itemsPerPage));
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginationData = filteredData.slice(
     startIndex,
@@ -99,7 +99,22 @@ export function Home() {
   };
 
   const handleSelectAll = (checked: boolean) => {
-    setSelectedIds(checked ? todos.map((t) => t.id) : []);
+    const currentPageIds = paginationData.map((todo) => todo.id);
+    setSelectedIds((prevSelected) => {
+      if (checked) {
+        // Thêm các ID của trang hiện tại nếu chưa có trong selectedIds
+        const newSelected = [...prevSelected];
+        currentPageIds.forEach((id) => {
+          if (!newSelected.includes(id)) {
+            newSelected.push(id);
+          }
+        });
+        return newSelected;
+      } else {
+        // Bỏ các ID của trang hiện tại ra khỏi selectedIds
+        return prevSelected.filter((id) => !currentPageIds.includes(id));
+      }
+    });
   };
 
   const handleConfirmDeleteAll = async () => {
@@ -134,9 +149,17 @@ export function Home() {
   }, []);
 
   useEffect(() => {
-    const page = parseInt(searchParams.get('page') || '1', 10);
-    setCurrentPage(page);
-  }, [searchParams]);
+    const newPage = 1;
+    setCurrentPage(newPage);
+
+    if (newPage === 1) {
+      searchParams.delete('page');
+    } else {
+      searchParams.set('page', String(newPage));
+    }
+
+    setSearchParams(searchParams);
+  }, [filter]);
 
   return (
     <div className="container mx-auto px-4 text-center max-w-5xl">
@@ -150,10 +173,12 @@ export function Home() {
             <Button
               variant="outline"
               onClick={() =>
-                handleSelectAll(selectedIds.length !== todos.length)
+                handleSelectAll(
+                  !paginationData.every((todo) => selectedIds.includes(todo.id))
+                )
               }
             >
-              {selectedIds.length === todos.length
+              {paginationData.every((todo) => selectedIds.includes(todo.id))
                 ? 'Unselect All'
                 : 'Select All'}
             </Button>
