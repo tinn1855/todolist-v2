@@ -23,6 +23,7 @@ import {
 import { deleteAllTodos } from '@/hooks/use-delete-todo';
 import { getTodos, Todo } from '@/hooks/use-get-todos';
 import { updateTodoStatus } from '@/hooks/use-update-todos';
+import { FilterByStatus } from '@/components/future/filter-by-status';
 
 export function Home() {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -30,14 +31,19 @@ export function Home() {
   const [openConfirmDeleteAll, setOpenConfirmDeleteAll] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const { filter, setFilter, filteredData } = FilterByStatus(todos);
+
   const itemsPerPage = 5;
 
   const pageParam = parseInt(searchParams.get('page') || '1', 10);
   const [currentPage, setCurrentPage] = useState<number>(pageParam);
 
-  const totalPages = Math.ceil(todos.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginationData = todos.slice(startIndex, startIndex + itemsPerPage);
+  const paginationData = filteredData.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
 
   const fetchTodos = async () => {
     try {
@@ -147,11 +153,15 @@ export function Home() {
         </div>
         <div className="flex gap-2 items-center">
           <span>Filter By:</span>
-          <Select>
+          <Select
+            onValueChange={(value) => setFilter(value as any)}
+            value={filter}
+          >
             <SelectTrigger className="w-[150px]">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="all">All</SelectItem>
               <SelectItem value="completed">Completed</SelectItem>
               <SelectItem value="incomplete">Incomplete</SelectItem>
             </SelectContent>

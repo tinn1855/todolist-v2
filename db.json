@@ -4,7 +4,7 @@
       "id": "8fba",
       "title": "Prepare the presentation slides for tomorrow",
       "priority": "medium",
-      "status": "incomplete"
+      "status": "completed"
     },
     {
       "id": "a76d",
@@ -65,6 +65,18 @@
       "title": "Coding and learning english\t 2",
       "priority": "medium",
       "status": "incomplete"
+    },
+    {
+      "id": "6425",
+      "title": "task nay la test",
+      "priority": "medium",
+      "status": "incomplete"
+    },
+    {
+      "id": "580f",
+      "title": "hahahahahds",
+      "priority": "medium",
+      "status": "completed"
     }
   ]
 }
