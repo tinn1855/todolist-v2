@@ -193,9 +193,7 @@ export function TableTodo({
             <Button variant="outline" onClick={() => setEditTodoId(null)}>
               Cancel
             </Button>
-            <Button variant="destructive" onClick={handleSaveEdit}>
-              Save
-            </Button>
+            <Button onClick={handleSaveEdit}>Save</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

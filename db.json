@@ -1,34 +1,22 @@
 {
   "todos": [
     {
-      "id": "6660",
-      "title": "Read the new book on software development",
-      "priority": "medium",
-      "status": "completed"
-    },
-    {
-      "id": "a14c",
-      "title": "Attend the team meeting at 3 PM",
-      "priority": "medium",
-      "status": "incomplete"
-    },
-    {
       "id": "9575",
       "title": "Prepare the presentation slides for tomorrow",
       "priority": "medium",
-      "status": "incomplete"
+      "status": "completed"
     },
     {
       "id": "55aa",
       "title": "Organize the files in the project folder",
       "priority": "medium",
-      "status": "completed"
+      "status": "incomplete"
     },
     {
       "id": "d635",
       "title": "Update the website with the latest content",
       "priority": "medium",
-      "status": "incomplete"
+      "status": "completed"
     },
     {
       "id": "78f6",
@@ -40,13 +28,13 @@
       "id": "3009",
       "title": "Complete the project report",
       "priority": "medium",
-      "status": "completed"
+      "status": "incomplete"
     },
     {
-      "id": "1478",
-      "title": "Check and respond to emails",
+      "id": "5598",
+      "title": "Coding and learning english",
       "priority": "medium",
-      "status": "completed"
+      "status": "incomplete"
     }
   ]
 }
