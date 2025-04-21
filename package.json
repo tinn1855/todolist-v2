@@ -10,6 +10,7 @@
     "predeploy": "pnpm run build",
     "deploy": "gh-pages -d dist/todolist"
   },
+  "homepage":"https://tinn1855.github.io/todolist-v2/",
   "nx": {
     "includedScripts": []
   },
