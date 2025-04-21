@@ -7,7 +7,8 @@
     "start": "nx serve",
     "build": "nx build todolist",
     "test": "nx test",
-    "deploy": "gh-pages -d dist/todolist-v2"
+    "predeploy": "cp dist/todolist-v2/index.html dist/todolist-v2/404.html",
+    "deploy": "pnpm run build && pnpm run predeploy && gh-pages -d dist/todolist-v2"
   },
   "homepage": "https://tinn1855.github.io/todolist-v2/",
   "nx": {

@@ -4,8 +4,8 @@ import react from '@vitejs/plugin-react';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
 
-export default defineConfig(({ mode }) => ({
-  base: mode === 'production' ? '/todolist-v2/' : '/',
+export default defineConfig(() => ({
+  base: '/',
   root: __dirname,
   cacheDir: './node_modules/.vite/todolist-v2',
   server: {
