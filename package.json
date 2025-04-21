@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "nx serve",
-    "build": "nx build",
+    "build": "nx build todolist",
     "test": "nx test",
     "predeploy": "cp dist/todolist-v2/index.html dist/todolist-v2/404.html",
     "deploy": "pnpm run build && pnpm run predeploy && gh-pages -d dist/todolist-v2"
