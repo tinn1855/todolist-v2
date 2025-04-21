@@ -4,10 +4,10 @@ import react from '@vitejs/plugin-react';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
 
-export default defineConfig(() => ({
-  base: '/todolist-v2',
+export default defineConfig(({ mode }) => ({
+  base: mode === 'production' ? '/todolist-v2/' : '/',
   root: __dirname,
-  cacheDir: './node_modules/.vite/todolist',
+  cacheDir: './node_modules/.vite/todolist-v2',
   server: {
     port: 4200,
     host: 'localhost',
@@ -22,7 +22,7 @@ export default defineConfig(() => ({
   //  plugins: [ nxViteTsPaths() ],
   // },
   build: {
-    outDir: './dist/todolist',
+    outDir: './dist/todolist-v2',
     emptyOutDir: true,
     reportCompressedSize: true,
     commonjsOptions: {
