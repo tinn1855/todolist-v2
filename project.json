@@ -7,5 +7,11 @@
   "tags": [],
   "// targets": "to see all targets run: nx show project todolist --web",
   "targets": {},
-  "outputPath": "dist/todolist"
+  "deploy": {
+    "executor": "@nrwl/web:deploy",
+    "options": {
+      "outputPath": "dist/apps/todolist-v2",
+      "baseHref": "/todolist-v2/"
+    }
+  }
 }
