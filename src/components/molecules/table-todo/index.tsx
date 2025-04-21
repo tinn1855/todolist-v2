@@ -33,12 +33,12 @@ import { useState } from 'react';
 
 interface TableTodoProps {
   todos: Todo[];
-  onStatusChange?: (id: number, status: Todo['status']) => void;
-  onPriorityChange?: (id: number, priority: Todo['priority']) => void;
-  onDelete: (id: number) => void;
+  onStatusChange?: (id: string, status: Todo['status']) => void;
+  onPriorityChange?: (id: string, priority: Todo['priority']) => void;
+  onDelete: (id: string) => void;
   onUpdate: (updatedTodo: Todo) => void; // Thêm onUpdate để cập nhật todos trong state
-  selectedIds: number[];
-  onToggleSelect: (id: number) => void;
+  selectedIds: string[];
+  onToggleSelect: (id: string) => void;
   onSelectAll: (checked: boolean) => void;
 }
 
@@ -47,13 +47,13 @@ export function TableTodo({
   onStatusChange,
   onPriorityChange,
   onDelete,
-  onUpdate, // Nhận thêm prop onUpdate
+  onUpdate,
   selectedIds,
   onToggleSelect,
 }: TableTodoProps) {
   const [open, setOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState<number | null>(null);
-  const [editTodoId, setEditTodoId] = useState<number | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [editTodoId, setEditTodoId] = useState<string | null>(null);
   const [editTodo, setEditTodo] = useState<Partial<Todo>>({ title: '' });
 
   const handleDeleteTodoById = async () => {
@@ -68,12 +68,12 @@ export function TableTodo({
     }
   };
 
-  const openConfirmDelete = (id: number) => {
+  const openConfirmDelete = (id: string) => {
     setSelectedId(id);
     setOpen(true);
   };
 
-  const openEditTodo = (id: number) => {
+  const openEditTodo = (id: string) => {
     const todo = todos.find((todo) => todo.id === id);
     if (todo) {
       setEditTodoId(id);
@@ -207,7 +207,15 @@ export function TableTodo({
         </DialogContent>
       </Dialog>
 
-      <Dialog open={!!editTodoId} onOpenChange={() => setEditTodoId(null)}>
+      <Dialog
+        open={!!editTodoId}
+        onOpenChange={(open) => {
+          if (!open) {
+            setEditTodoId(null);
+            setEditTodo({ title: '' });
+          }
+        }}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Edit Todo</DialogTitle>

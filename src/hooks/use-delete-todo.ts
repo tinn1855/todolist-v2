@@ -1,6 +1,6 @@
-const BASE_URL = 'http://localhost:3000/todos';
+const BASE_URL = 'https://6800cae3b72e9cfaf728b9b1.mockapi.io/api/v2/todos';
 
-export async function deleteTodoById(id: number): Promise<void> {
+export async function deleteTodoById(id: string): Promise<void> {
   const res = await fetch(`${BASE_URL}/${id}`, {
     method: 'DELETE',
   });
@@ -9,7 +9,7 @@ export async function deleteTodoById(id: number): Promise<void> {
   }
 }
 
-export async function deleteAllTodos(ids: number[]): Promise<void> {
+export async function deleteAllTodos(ids: string[]): Promise<void> {
   const results = await Promise.allSettled(
     ids.map((id) =>
       fetch(`${BASE_URL}/${id}`, {

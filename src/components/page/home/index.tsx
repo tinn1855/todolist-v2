@@ -28,7 +28,7 @@ import { FilterByPriority } from '@/components/future/filter-by-priority';
 
 export function Home() {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [openConfirmDeleteAll, setOpenConfirmDeleteAll] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -64,7 +64,7 @@ export function Home() {
     }
   };
 
-  const handleStatusChange = async (id: number, newStatus: Todo['status']) => {
+  const handleStatusChange = async (id: string, newStatus: Todo['status']) => {
     try {
       const updated = await updateTodoStatus(id, newStatus);
       setTodos((prev) =>
@@ -73,13 +73,13 @@ export function Home() {
         )
       );
     } catch (error) {
-      console.error('Update failed:', error);
+      console.error('Failed to update status:', error);
       alert('Failed to update status');
     }
   };
 
   const handlePriorityChange = async (
-    id: number,
+    id: string,
     newPriority: Todo['priority']
   ) => {
     try {
@@ -90,7 +90,8 @@ export function Home() {
         )
       );
     } catch (error) {
-      console.log('Update priority failed', error);
+      console.error('Failed to update priority:', error);
+      alert('Failed to update priority: ' + error); // Hiển thị lỗi chi tiết
     }
   };
 
@@ -98,11 +99,11 @@ export function Home() {
     setTodos((prev) => [...prev, todo]);
   };
 
-  const handleDeleteTodoById = (id: number) => {
+  const handleDeleteTodoById = (id: string) => {
     setTodos((prev) => prev.filter((todo) => todo.id !== id));
   };
 
-  const handleToggleSelect = (id: number) => {
+  const handleToggleSelect = (id: string) => {
     setSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
     );
