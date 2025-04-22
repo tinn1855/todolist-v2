@@ -20,11 +20,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { deleteAllTodos } from '@/hooks/use-delete-todo';
-import { getTodos, Todo } from '@/hooks/use-get-todos';
-import { updateTodoPriority, updateTodoStatus } from '@/hooks/use-update-todos';
+
 import { FilterByPriority } from '@/components/feature/filter-by-priority';
 import { FilterByStatus } from '@/components/feature/filter-by-status';
+import { getTodos, Todo } from '@/services/use-get-todos';
+import {
+  updateTodoPriority,
+  updateTodoStatus,
+} from '@/services/use-update-todos';
+import { deleteAllTodos } from '@/services/use-delete-todo';
 
 export function Home() {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -243,6 +247,7 @@ export function Home() {
           onToggleSelect={handleToggleSelect}
           onSelectAll={handleSelectAll}
           onUpdate={handleUpdateTodo}
+          existingTodos={todos}
         />
       </div>
 

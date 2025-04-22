@@ -1,8 +1,9 @@
-import { Todo } from '@/hooks/use-get-todos';
+import { Todo } from '@/services/use-get-todos';
 
 export function validateTodoTitle(
   title: string,
-  existingTodos: Todo[]
+  existingTodos: Todo[],
+  currentTodoId?: string
 ): string | null {
   const trimmed = title.trim();
 
@@ -15,8 +16,10 @@ export function validateTodoTitle(
     return 'Title cannot contain special characters.';
   }
 
-  const isDuplicate = existingTodos.some(
-    (todo) => todo.title.toLowerCase() === trimmed.toLowerCase()
+  const isDuplicate = (existingTodos ?? []).some(
+    (todo) =>
+      todo.title.toLowerCase() === trimmed.toLowerCase() &&
+      todo.id !== currentTodoId
   );
 
   if (isDuplicate) {

@@ -1,8 +1,8 @@
 import { validateTodoTitle } from '@/components/feature/validate-title-todos';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { createTodo } from '@/hooks/use-create-todo';
-import { Todo } from '@/hooks/use-get-todos';
+import { createTodo } from '@/services/use-create-todo';
+import { Todo } from '@/services/use-get-todos';
 import { useState } from 'react';
 
 interface AddTodoFormProps {
