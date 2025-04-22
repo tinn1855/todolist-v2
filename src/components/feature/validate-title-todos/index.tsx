@@ -11,7 +11,7 @@ export function validateTodoTitle(
     return 'Title cannot contain HTML tags.';
   }
 
-  if (!/^[a-zA-Z0-9\s.?'"!@$%&()\\-]+$/.test(trimmed)) {
+  if (!/^[a-zA-Z0-9\s.,?'"!@$%&()-]+$/.test(trimmed)) {
     return 'Title cannot contain special characters.';
   }
 
