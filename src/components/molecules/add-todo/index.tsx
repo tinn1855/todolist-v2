@@ -1,4 +1,4 @@
-import { validateTodoTitle } from '@/components/future/validate-title-todos';
+import { validateTodoTitle } from '@/components/feature/validate-title-todos';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { createTodo } from '@/hooks/use-create-todo';

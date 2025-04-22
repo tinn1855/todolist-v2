@@ -23,8 +23,8 @@ import {
 import { deleteAllTodos } from '@/hooks/use-delete-todo';
 import { getTodos, Todo } from '@/hooks/use-get-todos';
 import { updateTodoPriority, updateTodoStatus } from '@/hooks/use-update-todos';
-import { FilterByStatus } from '@/components/future/filter-by-status';
-import { FilterByPriority } from '@/components/future/filter-by-priority';
+import { FilterByPriority } from '@/components/feature/filter-by-priority';
+import { FilterByStatus } from '@/components/feature/filter-by-status';
 
 export function Home() {
   const [todos, setTodos] = useState<Todo[]>([]);

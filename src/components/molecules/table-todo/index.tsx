@@ -1,4 +1,4 @@
-import { SortByTitle } from '@/components/future/sort-by-title';
+import { SortByTitle } from '@/components/feature/sort-by-title';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
