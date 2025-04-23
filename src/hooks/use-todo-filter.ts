@@ -1,5 +1,5 @@
-import { FilterByStatus } from '@/components/feature/filter-by-status';
 import { FilterByPriority } from '@/components/feature/filter-by-priority';
+import { useFilterByStatus } from '@/components/feature/filter-by-status';
 import { Todo } from '@/services/use-get-todos';
 
 export function useTodoFilters(todos: Todo[]) {
@@ -7,7 +7,7 @@ export function useTodoFilters(todos: Todo[]) {
     filter,
     setFilter,
     filteredData: statusFiltered,
-  } = FilterByStatus(todos);
+  } = useFilterByStatus(todos);
   const {
     filterPriority,
     setFilterPriority,

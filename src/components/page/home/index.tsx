@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useState } from 'react';
 import { AddTodo } from '@/components/molecules/add-todo';
 import { PaginationTodo } from '@/components/molecules/pagination';
 import { TableTodo } from '@/components/molecules/table-todo';
@@ -13,60 +12,38 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Heading } from '@/components/ui/heading';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 
-import { FilterByPriority } from '@/components/feature/filter-by-priority';
-import { FilterByStatus } from '@/components/feature/filter-by-status';
-import { getTodos, Todo } from '@/services/use-get-todos';
+import { Todo } from '@/services/use-get-todos';
 import {
   updateTodoPriority,
   updateTodoStatus,
 } from '@/services/use-update-todos';
-import { deleteAllTodos } from '@/services/use-delete-todo';
+import { useFetchTodos } from '@/hooks/use-fetch-todo';
+import { usePagination } from '@/hooks/use-pagination';
+import { useTodoFilters } from '@/hooks/use-todo-filter';
+import { useTodoSelection } from '@/hooks/use-select-todo';
+import { DeleteMultiTodos } from '@/components/feature/delete-multi-todo';
+import { FilterByStatus } from '@/components/molecules/filter-by-status';
+import { FilterByPriority } from '@/components/molecules/filter-by-priority';
 
 export function Home() {
-  const [todos, setTodos] = useState<Todo[]>([]);
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const { todos, setTodos } = useFetchTodos();
+  const {
+    filter,
+    setFilter,
+    filterPriority,
+    setFilterPriority,
+    filteredTodos,
+  } = useTodoFilters(todos);
+
+  const { currentPage, totalPages, paginationData, handlePageChange } =
+    usePagination(filteredTodos);
+
+  const { selectedIds, setSelectedIds, handleToggleSelect } =
+    useTodoSelection();
+
+  const { deleteSelected } = DeleteMultiTodos(todos, setTodos, setSelectedIds);
   const [openConfirmDeleteAll, setOpenConfirmDeleteAll] = useState(false);
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const { filter, setFilter, filteredData } = FilterByStatus(todos);
-  const { filterPriority, setFilterPriority, filteredPriorityData } =
-    FilterByPriority(todos);
-
-  const combineFilter = filteredPriorityData.filter((todo) =>
-    filteredData.some((item) => item.id === todo.id)
-  );
-
-  const itemsPerPage = 5;
-
-  const pageParam = parseInt(searchParams.get('page') || '1', 10);
-  const [currentPage, setCurrentPage] = useState<number>(pageParam);
-
-  const totalPages = Math.max(
-    1,
-    Math.ceil(combineFilter.length / itemsPerPage)
-  );
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginationData = combineFilter.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
-
-  const fetchTodos = async () => {
-    try {
-      const data = await getTodos();
-      setTodos(data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   const handleStatusChange = async (id: string, newStatus: Todo['status']) => {
     try {
@@ -107,12 +84,6 @@ export function Home() {
     setTodos((prev) => prev.filter((todo) => todo.id !== id));
   };
 
-  const handleToggleSelect = (id: string) => {
-    setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
-    );
-  };
-
   const handleSelectAll = (checked: boolean) => {
     const currentPageIds = paginationData.map((todo) => todo.id);
     setSelectedIds((prevSelected) => {
@@ -133,14 +104,8 @@ export function Home() {
   };
 
   const handleConfirmDeleteAll = async () => {
-    try {
-      await deleteAllTodos(selectedIds);
-      setTodos((prev) => prev.filter((todo) => !selectedIds.includes(todo.id)));
-      setSelectedIds([]);
-      setOpenConfirmDeleteAll(false);
-    } catch (error) {
-      console.error('Failed to delete selected todos:', error);
-    }
+    deleteSelected(selectedIds);
+    setOpenConfirmDeleteAll(false);
   };
 
   const handleUpdateTodo = (updatedTodo: Todo) => {
@@ -148,31 +113,6 @@ export function Home() {
       prevTodos.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo))
     );
   };
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    if (page <= 1) {
-      searchParams.delete('page');
-    } else {
-      searchParams.set('page', String(page));
-    }
-    setSearchParams(searchParams);
-  };
-
-  useEffect(() => {
-    fetchTodos();
-  }, []);
-
-  useEffect(() => {
-    const newPage = 1;
-    setCurrentPage(newPage);
-    if (newPage === 1) {
-      searchParams.delete('page');
-    } else {
-      searchParams.set('page', String(newPage));
-    }
-    setSearchParams(searchParams);
-  }, [filter, filterPriority]);
 
   return (
     <div className="container mx-auto px-4 text-center max-w-5xl">
@@ -207,36 +147,16 @@ export function Home() {
         </div>
         <div className="flex gap-2 items-center">
           <span>Filter By:</span>
-          <Select
-            onValueChange={(value) => setFilter(value as any)}
+          <FilterByStatus
             value={filter}
-          >
-            <SelectTrigger className="w-[150px]">
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Status</SelectItem>
-              <SelectItem value="completed">Completed</SelectItem>
-              <SelectItem value="incomplete">Incomplete</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select
-            onValueChange={(value) => setFilterPriority(value as any)}
+            onChange={(value) => setFilter(value as any)}
+          />
+          <FilterByPriority
             value={filterPriority}
-          >
-            <SelectTrigger className="w-[100px]">
-              <SelectValue placeholder="Priority" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Priority</SelectItem>
-              <SelectItem value="high">High</SelectItem>
-              <SelectItem value="medium">Medium</SelectItem>
-              <SelectItem value="low">Low</SelectItem>
-            </SelectContent>
-          </Select>
+            onChange={(value) => setFilterPriority(value as any)}
+          />
         </div>
       </div>
-
       <div className="py-5">
         <TableTodo
           todos={paginationData}
