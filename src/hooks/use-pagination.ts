@@ -1,5 +1,5 @@
 import { useSearchParams } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export function usePagination<T>(data: T[], itemsPerPage = 5) {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -9,6 +9,15 @@ export function usePagination<T>(data: T[], itemsPerPage = 5) {
   const totalPages = Math.max(1, Math.ceil(data.length / itemsPerPage));
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginationData = data.slice(startIndex, startIndex + itemsPerPage);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(1);
+      const newParams = new URLSearchParams(searchParams.toString());
+      newParams.delete('page');
+      setSearchParams(newParams);
+    }
+  }, [data]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
