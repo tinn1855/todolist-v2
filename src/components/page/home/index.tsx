@@ -25,7 +25,6 @@ import { useTodoSelection } from '@/hooks/use-select-todo';
 import { DeleteMultiTodos } from '@/components/feature/delete-multi-todo';
 import { FilterByStatus } from '@/components/molecules/filter-by-status';
 import { FilterByPriority } from '@/components/molecules/filter-by-priority';
-import { todo } from 'node:test';
 
 export function Home() {
   const { todos, setTodos } = useFetchTodos();
@@ -37,8 +36,15 @@ export function Home() {
     filteredTodos,
   } = useTodoFilters(todos);
 
-  const { currentPage, totalPages, paginationData, handlePageChange } =
-    usePagination(filteredTodos);
+  const {
+    currentPage,
+    totalPages,
+    paginationData,
+    handlePageChange,
+    setCurrentPage,
+    setSearchParams,
+    searchParams,
+  } = usePagination(filteredTodos);
 
   const { selectedIds, setSelectedIds, handleToggleSelect } =
     useTodoSelection();
@@ -103,8 +109,6 @@ export function Home() {
       }
     });
   };
-  const { setCurrentPage, setSearchParams, searchParams } =
-    usePagination(todos);
 
   const handleConfirmDeleteAll = async () => {
     await deleteSelected(selectedIds);
