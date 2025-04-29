@@ -1,4 +1,5 @@
-const BASE_URL = 'https://6800cae3b72e9cfaf728b9b1.mockapi.io/api/v2/todos';
+// const BASE_URL = 'https://6800cae3b72e9cfaf728b9b1.mockapi.io/api/v2/todos';
+const BASE_URL = 'https://todolist-api-1-5nna.onrender.com/api/todos';
 
 export async function deleteTodoById(id: string): Promise<void> {
   const res = await fetch(`${BASE_URL}/${id}`, {

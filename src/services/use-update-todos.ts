@@ -1,11 +1,11 @@
 import { Todo } from './use-get-todos';
 
-const BASE_URL = 'https://6800cae3b72e9cfaf728b9b1.mockapi.io/api/v2/todos';
+const BASE_URL = 'https://todolist-api-1-5nna.onrender.com/api/todos';
 
 // Cập nhật status của todo
 export async function updateTodoStatus(id: string, status: Todo['status']) {
   const res = await fetch(`${BASE_URL}/${id}`, {
-    method: 'PUT',
+    method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -27,7 +27,7 @@ export async function updateTodoTitle(
   updatedTodo: Partial<Todo>
 ): Promise<Todo> {
   const res = await fetch(`${BASE_URL}/${id}`, {
-    method: 'PUT',
+    method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -48,7 +48,7 @@ export async function updateTodoPriority(
 ): Promise<Todo> {
   try {
     const res = await fetch(`${BASE_URL}/${id}`, {
-      method: 'PUT',
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },

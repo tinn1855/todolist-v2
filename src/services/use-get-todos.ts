@@ -5,7 +5,7 @@ export interface Todo {
   priority: 'low' | 'medium' | 'high';
 }
 
-const BASE_URL = 'https://6800cae3b72e9cfaf728b9b1.mockapi.io/api/v2/todos';
+const BASE_URL = 'https://todolist-api-1-5nna.onrender.com/api/todos';
 
 // GET tất cả todos
 export async function getTodos(): Promise<Todo[]> {
