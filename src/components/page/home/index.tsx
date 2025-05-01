@@ -1,18 +1,10 @@
 import { useState } from 'react';
+
+import { Button } from '@/components/ui/button';
 import { AddTodo } from '@/components/molecules/add-todo';
 import { PaginationTodo } from '@/components/molecules/pagination';
 import { TableTodo } from '@/components/molecules/table-todo';
-import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
 import { Heading } from '@/components/ui/heading';
-
 import { Todo } from '@/services/use-get-todos';
 import {
   updateTodoPriority,
@@ -22,12 +14,17 @@ import { useFetchTodos } from '@/hooks/use-fetch-todo';
 import { usePagination } from '@/hooks/use-pagination';
 import { useTodoFilters } from '@/hooks/use-todo-filter';
 import { useTodoSelection } from '@/hooks/use-select-todo';
-import { DeleteMultiTodos } from '@/components/feature/delete-multi-todo';
 import { FilterByStatus } from '@/components/molecules/filter-by-status';
 import { FilterByPriority } from '@/components/molecules/filter-by-priority';
+import { useDeleteMultipleTodos } from '@/hooks/use-delete-multi-todo';
+import { DeleteMultipleTodoDialog } from '@/components/feature/delete-multi-todo';
+import { useToast } from '@/hooks/use-toast';
+import { Toaster } from '@/components/ui/toaster';
 
 export function Home() {
   const { todos, setTodos } = useFetchTodos();
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
   const {
     filter,
     setFilter,
@@ -49,7 +46,11 @@ export function Home() {
   const { selectedIds, setSelectedIds, handleToggleSelect } =
     useTodoSelection();
 
-  const { deleteSelected } = DeleteMultiTodos(todos, setTodos, setSelectedIds);
+  const { deleteSelected } = useDeleteMultipleTodos(
+    todos,
+    setTodos,
+    setSelectedIds
+  );
   const [openConfirmDeleteAll, setOpenConfirmDeleteAll] = useState(false);
 
   const handleStatusChange = async (id: string, newStatus: Todo['status']) => {
@@ -111,12 +112,28 @@ export function Home() {
   };
 
   const handleConfirmDeleteAll = async () => {
-    await deleteSelected(selectedIds);
-    setOpenConfirmDeleteAll(false);
-    setCurrentPage(1);
-    const newParams = new URLSearchParams(searchParams.toString());
-    newParams.delete('page');
-    setSearchParams(newParams);
+    try {
+      setLoading(true);
+      await deleteSelected(selectedIds);
+      setOpenConfirmDeleteAll(false);
+      setCurrentPage(1);
+      const newParams = new URLSearchParams(searchParams.toString());
+      newParams.delete('page');
+      setSearchParams(newParams);
+      toast({
+        title: 'Deleted successfully',
+        description: `${selectedIds.length} task(s) were deleted.`,
+        duration: 2000,
+        variant: 'success',
+      });
+    } catch (err) {
+      toast({
+        title: 'Delete Failed',
+        description: `Fail to delete task ${err}`,
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleUpdateTodo = (updatedTodo: Todo) => {
@@ -188,31 +205,14 @@ export function Home() {
         onPageChange={handlePageChange}
       />
 
-      <Dialog
+      <DeleteMultipleTodoDialog
         open={openConfirmDeleteAll}
-        onOpenChange={setOpenConfirmDeleteAll}
-      >
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Are you sure?</DialogTitle>
-            <DialogDescription>
-              This will permanently delete all selected tasks. This action
-              cannot be undone.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setOpenConfirmDeleteAll(false)}
-            >
-              Cancel
-            </Button>
-            <Button variant="destructive" onClick={handleConfirmDeleteAll}>
-              Delete All
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        onClose={() => setOpenConfirmDeleteAll(false)}
+        onConfirm={handleConfirmDeleteAll}
+        selectedCount={selectedIds.length}
+        loading={loading}
+      />
+      <Toaster />
     </div>
   );
 }
