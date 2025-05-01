@@ -31,6 +31,41 @@ export function PaginationTodo({
     }
   };
 
+  const getVisiblePages = () => {
+    const pages: (number | string)[] = [];
+
+    if (totalPages <= 5) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+      return pages;
+    }
+
+    // Always show first page
+    pages.push(1);
+
+    if (currentPage > 3) {
+      pages.push('...');
+    }
+
+    // Pages around current page
+    const start = Math.max(2, currentPage - 1);
+    const end = Math.min(totalPages - 1, currentPage + 1);
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    if (currentPage < totalPages - 2) {
+      pages.push('...');
+    }
+
+    // Always show last page
+    pages.push(totalPages);
+
+    return pages;
+  };
+
+  const visiblePages = getVisiblePages();
+
   return (
     <Pagination>
       <PaginationContent className="flex items-center gap-2">
@@ -45,8 +80,15 @@ export function PaginationTodo({
           />
         </PaginationItem>
 
-        {Array.from({ length: totalPages }, (_, i) => {
-          const page = i + 1;
+        {visiblePages.map((page, index) => {
+          if (page === '...') {
+            return (
+              <PaginationItem key={`ellipsis-${index}`}>
+                <span className="px-2">...</span>
+              </PaginationItem>
+            );
+          }
+
           return (
             <PaginationItem key={page}>
               <PaginationLink
@@ -54,7 +96,7 @@ export function PaginationTodo({
                 isActive={page === currentPage}
                 onClick={(e) => {
                   e.preventDefault();
-                  onPageChange(page);
+                  onPageChange(Number(page));
                 }}
               >
                 {page}

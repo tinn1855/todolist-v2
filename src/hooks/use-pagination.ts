@@ -1,5 +1,5 @@
 import { useSearchParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 
 export function usePagination<T>(data: T[], itemsPerPage = 5) {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -27,6 +27,15 @@ export function usePagination<T>(data: T[], itemsPerPage = 5) {
     setSearchParams(newParams);
   };
 
+  // Tính toán danh sách page cần hiển thị
+  const visiblePages = useMemo(() => {
+    if (totalPages <= 5) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+
+    return [1, 2, '...', totalPages - 1, totalPages];
+  }, [totalPages]);
+
   return {
     currentPage,
     totalPages,
@@ -35,5 +44,6 @@ export function usePagination<T>(data: T[], itemsPerPage = 5) {
     setCurrentPage,
     searchParams,
     setSearchParams,
+    visiblePages, // <-- Trả ra danh sách trang hiển thị
   };
 }
