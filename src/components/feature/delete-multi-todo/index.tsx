@@ -23,15 +23,16 @@ export function DeleteMultipleTodoDialog({
   selectedCount,
   loading,
 }: DeleteMultipleTodoDialogProps) {
+  const taskLabel = selectedCount === 1 ? 'task' : 'tasks';
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Are you sure?</DialogTitle>
           <DialogDescription>
-            This will permanently delete {selectedCount} selected{' '}
-            {selectedCount === 1 ? 'task' : 'tasks'}. This action cannot be
-            undone.
+            This will permanently delete {selectedCount} selected{taskLabel}{' '}
+            This action cannot be undone.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>

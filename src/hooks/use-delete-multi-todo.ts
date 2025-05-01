@@ -4,13 +4,13 @@ import { Todo } from '@/services/use-get-todos';
 export function useDeleteMultipleTodos(
   todos: Todo[],
   setTodos: React.Dispatch<React.SetStateAction<Todo[]>>,
-  setSelectedIds: React.Dispatch<React.SetStateAction<string[]>>
+  clearSelection: () => void
 ) {
   const deleteSelected = async (selectedIds: string[]) => {
     try {
       await deleteAllTodos(selectedIds);
       setTodos(todos.filter((todo) => !selectedIds.includes(todo.id)));
-      setSelectedIds([]);
+      clearSelection();
     } catch (error) {
       console.error('Failed to delete selected todos:', error);
     }

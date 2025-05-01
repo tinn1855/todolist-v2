@@ -43,13 +43,18 @@ export function Home() {
     searchParams,
   } = usePagination(filteredTodos);
 
-  const { selectedIds, setSelectedIds, handleToggleSelect } =
-    useTodoSelection();
+  const {
+    selectedIds,
+    handleToggleSelect,
+    selectAllTodos,
+    deselectAllTodos,
+    clearSelection,
+  } = useTodoSelection();
 
   const { deleteSelected } = useDeleteMultipleTodos(
     todos,
     setTodos,
-    setSelectedIds
+    clearSelection
   );
   const [openConfirmDeleteAll, setOpenConfirmDeleteAll] = useState(false);
 
@@ -94,21 +99,7 @@ export function Home() {
 
   const handleSelectAll = (checked: boolean) => {
     const currentPageIds = paginationData.map((todo) => todo.id);
-    setSelectedIds((prevSelected) => {
-      if (checked) {
-        // Thêm các ID của trang hiện tại nếu chưa có trong selectedIds
-        const newSelected = [...prevSelected];
-        currentPageIds.forEach((id) => {
-          if (!newSelected.includes(id)) {
-            newSelected.push(id);
-          }
-        });
-        return newSelected;
-      } else {
-        // Bỏ các ID của trang hiện tại ra khỏi selectedIds
-        return prevSelected.filter((id) => !currentPageIds.includes(id));
-      }
-    });
+    checked ? selectAllTodos(currentPageIds) : deselectAllTodos(currentPageIds);
   };
 
   const handleConfirmDeleteAll = async () => {
@@ -130,6 +121,7 @@ export function Home() {
       toast({
         title: 'Delete Failed',
         description: `Fail to delete task ${err}`,
+        variant: 'destructive',
       });
     } finally {
       setLoading(false);
