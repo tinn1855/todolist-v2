@@ -85,16 +85,27 @@ export function Home() {
       );
     } catch (error) {
       console.error('Failed to update priority:', error);
-      alert('Failed to update priority: ' + error); // Hiển thị lỗi chi tiết
+      alert('Failed to update priority: ' + error);
     }
   };
 
   const handleAddTodo = (todo: Todo) => {
     setTodos((prev) => [...prev, todo]);
+    toast({
+      title: 'Created todo successfully',
+      duration: 2000,
+      variant: 'success',
+    });
   };
 
   const handleDeleteTodoById = (id: string) => {
     setTodos((prev) => prev.filter((todo) => todo.id !== id));
+    toast({
+      title: 'Deleted successfully',
+      description: 'Task were deleted.',
+      duration: 2000,
+      variant: 'success',
+    });
   };
 
   const handleSelectAll = (checked: boolean) => {
@@ -132,6 +143,10 @@ export function Home() {
     setTodos((prevTodos) =>
       prevTodos.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo))
     );
+    toast({
+      title: 'Edited successfully',
+      variant: 'success',
+    });
   };
 
   return (
